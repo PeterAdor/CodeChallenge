@@ -18,17 +18,3 @@ You don’t need to submit an activation request for your business. You can comp
 Upload the code to GitHub and share the link to the repo via the submission form below.
 Deploy the app via Heroku and share the link to the app via the submission form below
 Shortly after submission, we'll invite you for a virtual call to review your code with you and to ask a few clarifying questions about your approach. The focus of the Review will be on your code and your technical decisions, NOT on the visual design of the solution. So while we’d be glad to see a beautifully-designed web app, it’s your code that matters most.
-
-Submission
-
-The deadline for submission of your solution is 11:59 PM on 8th August 2019.
- 
-Please submit your solution through this form:
-
-
-https://app2.greenhouse.io/application_form/d48bb89ba3e0b1b6febf4503563f72a7
-
-
-Resources
-
-Paystack API Documentation: https://developers.paystack.co/docs&source=gmail&ust=1560158669373000&usg=AFQjCNGPGcMW4BSCvlSRNDgl9RxVdcmN8A">https://developers.paystack.co/docs
