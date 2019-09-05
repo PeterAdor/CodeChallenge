@@ -1,3 +1,15 @@
+<?php
+//session begins 
+session_start();
+
+// Check if the user is logged in, if not then redirect him to login page
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    header("location: login.php");
+    exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +17,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
-
 </head>
 
 <body>
@@ -13,11 +24,10 @@
 <!-- export sample file -->
 
  <div>
-            <form class="form-horizontal" action="functions.php" method="post" name="upload_excel"   
-                      enctype="multipart/form-data">
+            <form class="form-horizontal" action ="index.php" method="POST" name="upload_excel" enctype="multipart/form-data">
                   <div class="form-group">
                             <div class="col-md-4 col-md-offset-4">
-                                <input type="submit" name="Export" class="btn btn-success" value="Download Sample CSV"/>
+                                <input type="submit" name="Export" class="btn btn-success" value="View Sample CSV format"/>
 								
                             </div>
                    </div>                    
@@ -66,21 +76,21 @@
 			
 			
             <?php
-//session begins 
-session_start();
+
 
 //include the database configuration file
  include ("config.php");
- 
-  
    
   $Sql = "SELECT * FROM $_SESSION[username]";
 	
-   $result = mysqli_query($link, $Sql);   
+   if(!$result = mysqli_query($link, $Sql)) 
+   
+   {echo "";
+   }
 
 if (empty($result)){
 	
- $result = "";
+ $result = 0;
  }
   else  if (mysqli_num_rows($result) > 0) {
 	  
@@ -96,7 +106,7 @@ if (empty($result)){
       while($row = mysqli_fetch_assoc($result))
 		if (null ==$row){
 		
-		$row = "";
+		$row = 0;
 		
 	}else {
 
@@ -189,12 +199,58 @@ else if(isset($_POST["Cancel_payment"])){
  else {
 	 echo "error";
 	}
+	$link->close();
 	
+	if(isset($_POST["Export"]))
+		
+		{ echo " <h4 style = 'background-color: red; color: white ;'>Upload your CSV file in the format below. Please do not include the headers</h4>".
+		
+		"<table class='table table-striped table-bordered'>
+             <thead><tr><th>id</th>
+                          <th>bank_name</th>
+                          <th>account_number</th>
+                          <th>account_name</th>
+                          <th>amount</th>
+						  <th>reference</th>
+                        </tr></thead><tbody><tr><td>1</td>
+                   <td>union bank</td>
+                   <td>2147483647</td>
+                   <td>Ador Peter Peter</td>
+                   <td>700000</td>
+				   <td>project  payment</td> </tr><tr><td>2</td>
+                   <td>diamond bank</td>
+                   <td>4027784012</td>
+                   <td>Ador Peter Peter</td>
+                   <td>700000</td>
+				   <td>reference 5</td> </tr><tr><td>3</td>
+                   <td>first bank</td>
+                   <td>2147483647</td>
+                   <td>Ador Peter Peter</td>
+                   <td>700000</td>
+				   <td>reference 6</td> </tr><tr><td>4</td>
+                   <td>first bank</td>
+                   <td>2147483647</td>
+                   <td>Ador Peter Peter</td>
+                   <td>700000</td>
+				   <td>reference 7</td> </tr><tr><td>5</td>
+                   <td>first city monument bank</td>
+                   <td>2147483647</td>
+                   <td>Ador Peter Peter</td>
+                   <td>700000</td>
+				   <td>payment for supplies</td> </tr><tr>
+				    </tr></tbody></table></div><b></form></div>
+						
+			<form class='form-horizontal' action ='index.php' method='POST' name='upload_excel' enctype='multipart/form-data'>	
+			<input type='submit' name='close' style = 'background-color: red; color: white ;' value='Close Sample CSV'/>
+</form>";
+			}
+			
+			if(isset($_POST["close"]))
+			{
+				unset($_POST["Export"]);
+				
+				}
 ?>
-
-
-
-
         </div>
     </div> </center>
 	
