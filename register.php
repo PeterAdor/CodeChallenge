@@ -1,137 +1,361 @@
 <?php
-// Include config file
-require_once "config.php";
+// Initialize the session
+session_start();
+
+
  
-// Define variables and initialize with empty values
-$username = $password = $confirm_password = "";
-$username_err = $password_err = $confirm_password_err = "";
  
-// Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+// Check if the user is logged in, if not then redirect him to login page
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    header("location: login.php");
+    exit;
+}
+
+//initial variables
+
+if(isset($_POST["Amount"])== true){
+   
+$_SESSION["Amount"] = $_POST["Amount"];
+
+}
  
-    // Validate username
-    if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter a username.";
-    } else{
-        // Prepare a select statement
-        $sql = "SELECT id FROM users WHERE username = ?";
-        
-        if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
-            
-            // Set parameters
-            $param_username = trim($_POST["username"]);
-            
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                /* store result */
-                mysqli_stmt_store_result($stmt);
-                
-                if(mysqli_stmt_num_rows($stmt) == 1){
-                    $username_err = "This username is already taken.";
-                } else{
-                    $username = trim($_POST["username"]);
-                }
-            } else{
-                echo "Oops! Something went wrong. Please try again later.";
-            }
-        }
-         
-        // Close statement
-        mysqli_stmt_close($stmt);
-    }
-    
-    // Validate password
-    if(empty(trim($_POST["password"]))){
-        $password_err = "Please enter a password.";     
-    } elseif(strlen(trim($_POST["password"])) < 6){
-        $password_err = "Password must have atleast 6 characters.";
-    } else{
-        $password = trim($_POST["password"]);
-    }
-    
-    // Validate confirm password
-    if(empty(trim($_POST["confirm_password"]))){
-        $confirm_password_err = "Please confirm password.";     
-    } else{
-        $confirm_password = trim($_POST["confirm_password"]);
-        if(empty($password_err) && ($password != $confirm_password)){
-            $confirm_password_err = "Password did not match.";
-        }
-    }
-    
-    // Check input errors before inserting in database
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
-        
-        // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
-         
-        if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
-            
-            // Set parameters
-            $param_username = $username;
-            $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
-            
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                // Redirect to login page
-                header("location: login.php");
-            } else{
-                echo "Something went wrong. Please try again later.";
-            }
-        }
-         
-        // Close statement
-        mysqli_stmt_close($stmt);
-    }
-    
-    // Close connection
-    mysqli_close($link);
+function wallet(){
+//include the database configuration file
+ include ("config.php");
+ 
+ //display the current wallet balance 
+$sql = "SELECT Amount FROM users  WHERE username = '$_SESSION[username]'";
+
+if($resul3 = mysqli_query($link, $sql)){
+	
+$balance = $resul3->fetch_assoc();
+
+echo "Balance: "."NGN".$balance["Amount"];
+		
+}
 }
 ?>
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
  
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-    <style type="text/css">
-        body{ font: 14px sans-serif; }
-        .wrapper{ width: 350px; padding: 20px; }
-    </style>
+	
+	<style> .avatar {
+  vertical-align: middle;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.dropbtn {
+  background-color: white;
+  color: white;
+  padding: px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {color:green ;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: white;}
+
+
+
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: green;
+}
+
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.dropdownM {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdownM .dropbtn-menu {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdownM:hover .dropbtn-menu {
+  background-color: red;
+}
+
+.dropdownM-menu-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdownM-menu-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdownM-menu-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdownM:hover .dropdownM-menu-content {
+  display: block;
+}
+
+
+
+/* Button used to open the contact top up wallet form */
+.Load-Wallet {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+
+  
+  
+  width: 280px;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=Amount] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=Amount]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/Top Up Balance button */
+.form-container .btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .Load-Wallet:hover {
+  opacity: 1;
+}
+
+ </style>
+    <title>Welcome
+	
+	
+</title>
+	
+    
+  
 </head>
-<body><center>
-    <div class="wrapper">
-        <h2>Sign Up</h2>
-        <p>Please fill this form to create an account.</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-                <label>Username</label>
-                <input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
-                <span class="help-block"><?php echo $username_err; ?></span>
-            </div>    
-            <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
-                <label>Password</label>
-                <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
-                <span class="help-block"><?php echo $password_err; ?></span>
-            </div>
-            <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
-                <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>">
-                <span class="help-block"><?php echo $confirm_password_err; ?></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Submit">
-              
-            </div>
-            <p>Already have an account? <a href="login.php">Login here</a>.</p>
-        </form>
-		
-		
-    </div>    
+
+<body>
+
+
+
+
+
+
+<div class="dropdown" style = "float:right">
+
+ Hi, <?php echo htmlspecialchars($_SESSION["username"]);  ?>
+ 
+  
+			<class="dropbtn">
+
+  <img src="http://localhost/pay/avatar.png" alt="Avatar" class="avatar">
+  
+  
+		<div class="dropdown-content">
+ 
+			<a href="#">My Profile</a>
+			<a href="#">Get Help</a>
+			<a href="logout.php" class="btn btn-danger";>Sign Out</a>
+					
+			<class="dropbtn"/>
+  </div>
+</div>
+
+<br>
+
+ <div class="navbar">
+  <a href="#home">Home</a>
+  <a href="#news"><?php  wallet();?></a>
+  <div class="dropdownM">
+    <button class="dropbtn-menu">New Transfer 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdownM-menu-content">
+      <a href="#">Single Transfers</a>
+	  <form method = "POST" action = "index.php">
+	  <input type ="hidden" value= "<?php  echo $_SESSION["username"];?>">
+	  <input type ="submit" value= "Bulk Transfers">
+	  </form >
+     
+	  
+	  
+	  
+      <a href="#"><button class="Load-Wallet" onclick="openForm()"> Top Up Balance  </button></a>
+    </div>
+  </div> 
+</div>
+ 
+ 
+ 
+ 
+
+
+<div class="form-popup" id="myForm">
+  <form method ="POST" action=" wallet.php" class="form-container">
+    <h1>Top Up Balance</h1>
+
+    <label for="Balance"><b>Balance</b></label>
+    <input type="text" value="NGN Balance" name="Balance">
+
+    <label for="Amount"><b>Amount</b></label>
+    <input type="Amount" placeholder="Enter Amount" name="Amount" required>
+
+    <button type="submit" class="btn">Top Up Balance</button>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
+</div>
+<!--java script code to display top up form-->
+
+
+
+<script>
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+</script>
+
+ 
+ 
+ 
+    </p>
 </body>
 </html>
