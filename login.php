@@ -99,7 +99,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         .wrapper{ width: 350px; padding: 20px; }
     </style>
 </head>
-<body>
+<body><center>
     <div class="wrapper">
         <h2>Login</h2>
         <p>Please fill in your credentials to login.</p>
@@ -119,7 +119,24 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				<a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
             </div>
             <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
-        </form>
-    </div>    
+        </form></div> 
+       
+		
+        <h3><b>Coding Challenge for Technical Product Specialist role at Paystack</b> </h3>
+<p>
+The finance lead of a small bakery is having difficulties paying her suppliers.<br><br>
+
+She currently pays them with cash or one-off bank transfers, and the process is labour intensive.<br><br><br>
+
+She heard that Paystack can help her do all her transfers easily, and she has hired you to build a small tool to help her do this.<br><br>
+
+Write a simple web app that can handle her disbursements, taking extra care to make sure that she doesn't send money to the wrong person.<br><br>
+
+ </p></h4> </center>
+
+
+
+
+       
 </body>
 </html>
